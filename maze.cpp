@@ -6,19 +6,19 @@ using namespace std;
 
 const int Width = 50;
 const int Height = 30;
-
+// Structure to hold position coordinates
 struct Position {
     int x;
     int y;
 };
-
+// Function to set cursor position
 void gotoxy(int x, int y){
 	COORD coord;
     coord.X = x;
     coord.Y = y;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
-
+// Function to draw the game screen boundaries
  void screen(){
  	 for (int i = 0; i < Width; i++) {
         gotoxy(i, 0);
@@ -34,7 +34,7 @@ void gotoxy(int x, int y){
         cout << "#";
     }
  }
- 
+ // Function to draw the maze
  void maze(){
   for (int i = 0; i < Width - 4; i++) {
         gotoxy(i + 1, 3);
@@ -100,9 +100,9 @@ void gotoxy(int x, int y){
         gotoxy(i + Width / 2 + 10, 27);
         cout << "*";
     }
- 	
+ // Additional maze walls...	
  }
- 
+// Function to draw player and destination positions 
  void drawPositions(const Position& playerPos, const Position& destPos){
  	 gotoxy(playerPos.x, playerPos.y);
     cout << "@";
@@ -110,7 +110,7 @@ void gotoxy(int x, int y){
        gotoxy(destPos.x,destPos.y);
     cout<<"()";
  }
- 
+// Function to check for collision with maze boundaries 
  bool checkCollision(const Position& newPos) {
     if (newPos.x <= 0 || newPos.x >= Width - 1 
    || newPos.y <= 0 || newPos.y >= Height - 1)
@@ -119,7 +119,7 @@ void gotoxy(int x, int y){
 
     return false;   
 }
-
+// Function to check if player reached destination
 bool checkWin(const Position& playerPos, const Position& destPos) {
     if (playerPos.x == destPos.x && playerPos.y == destPos.y)
         return true;
@@ -127,7 +127,7 @@ bool checkWin(const Position& playerPos, const Position& destPos) {
     
     
 }
- 
+ // Main function
  int main(){
  	system("mode con: lines=40 cols=70");
  	Position playerPos = {2,2};
@@ -143,9 +143,9 @@ bool checkWin(const Position& playerPos, const Position& destPos) {
     cursorInfo.bVisible = false;
     SetConsoleCursorInfo(consoleHandle, &cursorInfo);
     
-    	gotoxy(0,Height/2-3);
- 	
- 	cout<<"<<<<< Instruction >>>>>:"<<endl;
+    gotoxy(0,Height/2-3);
+    // Game instructions	
+    cout<<"<<<<< Instruction >>>>>:"<<endl;
     cout<<"********"<<endl;
     cout<<"Use Arrow keys (Left,Right,Up,Down) for move:"<<endl;
     cout<<endl;
@@ -153,17 +153,17 @@ bool checkWin(const Position& playerPos, const Position& destPos) {
      system("pause");
      
      system("cls");
- 	screen();
- 	maze();
+     screen();// Draw game screen boundaries
+     maze();// Draw maze walls
  	
- 	drawPositions(playerPos, destPos);
+ 	drawPositions(playerPos, destPos);// Draw player and destination positions
  	while(true){
  		
  	Position newPos = playerPos;
  	
  	if(_kbhit()){
  		char key = _getch();
- 		
+ 		// Move player based on key input
  		if(key==80){
  			newPos.y++;
 		 }
@@ -180,7 +180,7 @@ bool checkWin(const Position& playerPos, const Position& destPos) {
 		}	
 		
 	 }
-	 
+	 // Check for collision and update player position
 	 if(!checkCollision(newPos)){
 	  gotoxy(playerPos.x, playerPos.y);
         cout << " ";
@@ -190,14 +190,14 @@ bool checkWin(const Position& playerPos, const Position& destPos) {
        drawPositions(playerPos, destPos); 
         	
 	 }
-	 
+	 // Check if player reached destination
 	 if (checkWin(playerPos, destPos))
-    break;
+         break;
  		
-	 }//while
-	
+	 }
+	// Print congratulations message
 	 gotoxy(2, Height+1);
 	 cout << "Congratulations! You reached the destination!" << endl;
 	 
 	 return 0;	
- }//main
+ }
